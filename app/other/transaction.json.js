@@ -1,6 +1,7 @@
 "use strict";
 
 var faker = require('faker'),
+	utils = require('./utils'),
 	min_postings_per_tr = 2,
 	max_postings_per_tr = 5,
 	ave_tr_amount = 300,
@@ -30,21 +31,21 @@ function get_postings() {
 
 			for (var i=1; i<=p_number; i++) {
 				if (p.length === 0) {
-					p_amount = get_amount(Math.random() * ave_tr_amount * 2 
+					p_amount = utils.get_amount(Math.random() * ave_tr_amount * 2 
 							* (p_number - 1) / p_number + ave_tr_amount / 2);
 					t_balance = p_amount;
 				} else if (p.length < p_number - 1) {
 						if (t_balance === 0) {
 								break;
 						}
-						p_amount = get_amount(Math.random() * ave_tr_amount * 2 
+						p_amount = utils.get_amount(Math.random() * ave_tr_amount * 2 
 							/ p_number);
 						if (p_amount > t_balance) {
 									p_amount = t_balance;
 						}
 						t_balance -= p_amount;
 				} else  {
-						p_amount = get_amount(t_balance);
+						p_amount = utils.get_amount(t_balance);
 				}
 				//console.log("_"+p_amount+"/"+t_balance);
 
@@ -70,11 +71,6 @@ function get_postings() {
 				p.push(p_i);
 			}	
 			return p;
-}
-
-function get_amount(number) {
-	//round 'number' to 2 decimal plces
-	return Math.round(number * 100) / 100;
 }
 
 function get_average(number) {
