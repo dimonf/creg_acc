@@ -8,6 +8,7 @@ var faker = require('faker'),
 	tr_statuses = ['deleted','posted', 'pending'],
 	tags_budgets = ['budget_a', 'budget_b'],
 	tags_projects = ['project_a', 'project_b','project_c'],
+	accounts = ['01.01','01.02','04.01','04.02','51.01','60','63.01','63.02','50'],
 	getTransaction = function() {
 
 		var tr = {
@@ -26,8 +27,8 @@ function get_postings() {
 					min_postings_per_tr)) + min_postings_per_tr,
 					dtct = faker.random.array_element(['dt','ct']),
 					p = [], p_amount = 0, t_balance = 0;
-			for (var i=1; i<=p_number; i++) {
 
+			for (var i=1; i<=p_number; i++) {
 				if (p.length === 0) {
 					p_amount = get_amount(Math.random() * ave_tr_amount * 2 
 							* (p_number - 1) / p_number + ave_tr_amount / 2);
@@ -50,6 +51,7 @@ function get_postings() {
 				var p_i = {
 						status: 'ok',
 						dtct: dtct,
+						account: faker.random.array_element(accounts),
 						details: faker.lorem.sentence(1),
 						tags: [
 							faker.random.array_element(tags_budgets),
