@@ -6,7 +6,7 @@ var config = require('./config'),
 module.exports = function() {
 	var db = mongoose.connect(config.db);
 
-	require('../app/models/s.user_m');
+	require('../app/models/s.m.user');
 
 	return db;
 }
