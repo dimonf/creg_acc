@@ -38,7 +38,7 @@ module.exports = function() {
 
 	//routing files
 	require('../app/routes/s.r.index.js')(app);	
-	require('../app/routes/s.r.entity.js');
+	require('../app/routes/s.r.users.js')(app);
 
 	app.use(express.static('./public'));
 	return(app);
