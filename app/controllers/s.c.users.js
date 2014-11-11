@@ -13,4 +13,13 @@ exports.create = function(req, res, next) {
 		});
 };
 
+exports.list = function(req, res, next) {
+		User.find({}, function(err, users) {
+			if (err) { 
+				return next(err);
+			} else {
+				res.json(users);
+			}
+		});
+}
 
