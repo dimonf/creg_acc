@@ -25,7 +25,11 @@ var accTotals = {
 				return red_val;
 		},
 		fin: function(key, red_val) {
-
+				//return red_val;
+				red_val.amount = utils.get_amount(red_val.amount);
+				//red_val.amount_o = Math.round(10*red_val.amount)/10;
+				//red_val.amount = Math.round(10*red_val.amount)/10;
+				return red_val;
 		}
 }
 
@@ -35,7 +39,11 @@ MongoClient.connect(config.db_url, function(err, db) {
 
 	var collection = db.collection(config.db_collection);
 	collection.mapReduce(accTotals.map, accTotals.red, 
-			{out: {replace:config.db_collection_mr_out}}, function(err, results){
+			{
+					out: {replace:config.db_collection_mr_out},
+					finalize: accTotals.fin,
+					scope: {'utils':utils}
+			}, function(err, results){
 				console.log(results);
 				//get_totals helpful with '{out: {inplace:1}}' option only.
 				//get_total(results);
