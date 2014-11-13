@@ -9,9 +9,24 @@ var UserSchema = new Schema ({
 	email: {
 		type: String,
 	 	index: true,
+		unique: true,
 	 	match: /.+\@.+\..+/,
 		required: true
 	 },
+	website:{
+		type: String,
+		set: function(url){
+			if (!url) {
+				return url;
+			} else {
+				if (url.indexOf('http://') !==0 && 
+						url.indexOf('https://') !==0){
+								url = ['http://', url].join('');
+						}
+				return url;
+			}
+		}
+	},
  	username: String,
 	password: {
 		type: String,	  
@@ -21,6 +36,9 @@ var UserSchema = new Schema ({
 		  },
 	 		'password shall be at least 8 characters long'
 		],
+		get: function(pass) {
+				return(['!',pass].join('_'));
+		},
 	},
 	role: {
 		type: String,
@@ -29,7 +47,16 @@ var UserSchema = new Schema ({
 	created: {
 		type: Date,
 		default: Date.now
+	},
+	soc:{
+		type: String,
+		unique: true,
 	}
+
+});
+
+UserSchema.virtual('fullName').get(function(){
+	return [this.firstName, this.lastName].join(' ');
 });
 
 UserSchema.methods.authenticate = function(password){
