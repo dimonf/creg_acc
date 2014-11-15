@@ -4,7 +4,7 @@ var faker = require('faker'),
 	min_postings_per_tr = 2,
 	max_postings_per_tr = 5,
 	ave_tr_amount = 300,
-	roles = ['admin','user','power user'];
+	roles = ['admin','user','owner'];
 
 var getUser = function() {
 		var user = {

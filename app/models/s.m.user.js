@@ -42,7 +42,7 @@ var UserSchema = new Schema ({
 	},
 	role: {
 		type: String,
-	 	enum: ['admin', 'owner', 'user' ]
+	 	enum: ['admin', 'owner', 'user' ],
 	},
 	created: {
 		type: Date,
@@ -50,7 +50,6 @@ var UserSchema = new Schema ({
 	},
 	soc:{
 		type: String,
-		unique: true,
 	}
 
 });
