@@ -70,10 +70,6 @@ UserSchema.virtual('fullName').get(function(){
 	return [this.firstName, this.lastName].join(' ');
 });
 
-UserSchema.methods.authenticate = function(password){
-	return this.password === this.hashPassword(password);
-}
-
 UserSchema.pre('save', function(next){
 		if (this.password) {
 			this.salt = new
@@ -85,6 +81,10 @@ UserSchema.pre('save', function(next){
 UserSchema.methods.hashPassword = function(password){
 		return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
 };
+
+UserSchema.methods.authenticate = function(password){
+	return this.password === this.hashPassword(password);
+}
 
 UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 		var _this = this;

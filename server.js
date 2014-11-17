@@ -9,11 +9,10 @@ var mongoose = require('./config/mongoose'),
 	passport = require('./config/passport'),
 	config = require('./config/config'),
 	http_port = config.http_port;
-var db = mongoose();
 
-var app = express();
-
-var passport = passport();
+var db = mongoose(),
+		app = express(),
+		passport = passport();
 
 app.listen(http_port);
 

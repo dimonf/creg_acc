@@ -101,7 +101,6 @@ exports.signup = function(req, res, next) {
 					res.redirect('/');
 				});
 		});
-
 	} else {
 		res.redirect('/');
 	}

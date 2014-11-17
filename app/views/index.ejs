@@ -5,8 +5,15 @@
 <title> <%= title%> </title>
 </head>
 <body>
-<img src="img/332148.jpg" alt="Logo">
  <h1><%= title%> <h1>
+ <% if (userFullName ) { %>
+  <h2> Hello <%= userFullName %> </h2>
+	<% } else { %>
+	<a href="/signup">Signup</a>
+	<a href="/signin">Signin</a>
+	<% } %>
+	<br>
+	<img src="img/332148.jpg" alt="Logo">
 </body>
 
 </html>

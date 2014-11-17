@@ -24,6 +24,8 @@ for (var i=0; i < 30; i++) {
 			console.log('>> error');
 			console.log(e);
 	});
+	//catching 'reponse' event is the same as providing
+	//a callback as second param to http.request()
 	req.on('response', function(res){
 			var str = "";
 
