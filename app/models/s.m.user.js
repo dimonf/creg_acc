@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-	 Schema = mongoose.Schema;
+	 Schema = mongoose.Schema,
+	 crypto = require('crypto');
 
 var UserSchema = new Schema ({
 	firstName: String,
@@ -27,19 +28,30 @@ var UserSchema = new Schema ({
 			}
 		}
 	},
- 	username: String,
+ 	username: {
+			type: String,
+			unique: true,
+			required: 'username required',
+			trim: true
+	},
 	password: {
 		type: String,	  
 	 	validate: [
 		  function(password){
-				return password.length >=8
+				return password && password.length >=8
 		  },
 	 		'password shall be at least 8 characters long'
 		],
-		get: function(pass) {
-				return(['!',pass].join('_'));
-		},
 	},
+	salt: {
+		type: String
+	},
+	provider: {
+		type: String,
+		required: 'Provider is required'
+	},
+	providerId: String,
+	providerData: {},
 	role: {
 		type: String,
 	 	enum: ['admin', 'owner', 'user' ],
@@ -59,8 +71,39 @@ UserSchema.virtual('fullName').get(function(){
 });
 
 UserSchema.methods.authenticate = function(password){
-	return this.password === password;
+	return this.password === this.hashPassword(password);
 }
+
+UserSchema.pre('save', function(next){
+		if (this.password) {
+			this.salt = new
+				Buffer(crypto.randomBytes(16).toString('base64'),'base64');
+			this.password = this.hashPassword(this.password);
+		}
+});
+
+UserSchema.methods.hashPassword = function(password){
+		return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
+};
+
+UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
+		var _this = this;
+		possibleUsername = username + (suffix || '');
+
+		_this.findOne({
+				username: possibleUsername
+		}, function(err, user) {
+				if (!err) {
+					if (!user) {
+						callback(possibleUsername);
+					} else {
+						return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+					}
+				} else {
+					callback(null);
+				}
+		});
+};
 
 UserSchema.set('toJSON', {
 		  getters: true,

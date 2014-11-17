@@ -13,7 +13,7 @@ var db = mongoose();
 
 var app = express();
 
-//var passport = passport();
+var passport = passport();
 
 app.listen(http_port);
 
