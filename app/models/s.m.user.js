@@ -76,6 +76,7 @@ UserSchema.pre('save', function(next){
 				Buffer(crypto.randomBytes(16).toString('base64'),'base64');
 			this.password = this.hashPassword(this.password);
 		}
+		next();
 });
 
 UserSchema.methods.hashPassword = function(password){
@@ -83,6 +84,7 @@ UserSchema.methods.hashPassword = function(password){
 };
 
 UserSchema.methods.authenticate = function(password){
+	console.log('>'+this.password, password, this.hashPassword(password));
 	return this.password === this.hashPassword(password);
 }
 

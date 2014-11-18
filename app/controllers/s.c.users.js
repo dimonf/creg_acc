@@ -1,6 +1,7 @@
 "use strict";
 
-var User = require('mongoose').model('User');
+var User = require('mongoose').model('User'),
+		passport = require('passport');
 
 exports.userById = function(req, res, next, id) {
 		User.findOne({
@@ -70,6 +71,15 @@ exports.renderSignin = function(req, res, next){
 		} else {
 			return res.redirect('/');
 		}		
+};
+
+exports.signin = function(req, res, next){
+	console.log('signin_controller');
+	passport.authenticate('local', {
+		successRedirect: '/',
+		failureRedirect: '/login',
+		failureFlash: true
+	});
 };
 
 exports.renderSignup = function(req, res, next) {
