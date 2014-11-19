@@ -75,11 +75,18 @@ exports.renderSignin = function(req, res, next){
 
 exports.signin = function(req, res, next){
 	console.log('signin_controller');
-	passport.authenticate('local', {
-		successRedirect: '/',
-		failureRedirect: '/login',
-		failureFlash: true
-	});
+	passport.authenticate('local', function(err, user, info) {
+		if (err) {return next(err);}
+		if (!user) {
+				req.flash('error',info.message);
+				console.log('cant find user '+JSON.stringify(info));
+				return res.redirect('/signin');
+		}
+		req.login(user, function(err) {
+			if (err){return next(err);}
+			return res.redirect('/');
+		});
+	})(req, res, next);
 };
 
 exports.renderSignup = function(req, res, next) {
@@ -102,6 +109,7 @@ exports.signup = function(req, res, next) {
 
 		user.save(function(err) {
 				if (err) {
+						console.log(err);
 						var message = getErrorMessage(err);
 						req.flash('error', message);
 						return res.redirect('/signup');
@@ -128,7 +136,10 @@ var getErrorMessage = function(err) {
 			switch (err.code) {
 				case 11000:
 				case 11001:
-					message = 'Username already exists';
+					//duplication of 'unique' indexed value
+					var m_a = err.err.match(/key error index:.*(\$\S+).*(dup key.*)/);
+					message = [m_a[1], m_a[2]].join(' ');
+					//message = 'Username already exists';
 					break;
 				default:
 					message = 'Something wrong';
